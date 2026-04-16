@@ -1,83 +1,89 @@
-#gradient  descent python 
-import matplotlib.pyplot   as  plt 
-x = [1, 2, 3, 4]
-y = [2, 4, 6, 8]
+"""Linear regression with gradient descent (from scratch).
 
-y_before = [0 * xi + 0 for xi in x]
-def compute_mse(x:list[float],y:list[float],w:float,b:float) -> float:
-    """Compute Mean sqaured error  between   true  and  predicted  values 
-    Args:
-        x :input  features 
-        y:True labels
-        w: Weight
-        b:bias 
+This module demonstrates how to train a univariate linear regression model
+without machine learning libraries.
+"""
 
-    Returns:
-        MSE value
-    """
+from __future__ import annotations
+
+import matplotlib.pyplot as plt
+
+
+X_DATA = [1.0, 2.0, 3.0, 4.0]
+Y_DATA = [2.0, 4.0, 6.0, 8.0]
+
+
+def compute_mse(x: list[float], y: list[float], w: float, b: float) -> float:
+    """Compute mean squared error between true and predicted values."""
     n = len(y)
-    total = 0
+    total = 0.0
     for i in range(n):
-        error = y[i]  - (w*x[i] +b )
+        error = y[i] - (w * x[i] + b)
         total += error**2
-    return total/n
-def compute_gradients (x:list[float],y:list[float],w:float,b:float)  ->tuple[float,float]:
-    """Compute gradients  of MSE  w.r.t w  and  b 
-        x :input  features 
-        y:True labels
-        w: Weight
-        b:bias 
+    return total / n
 
-    Returns:
-        Tuple of(dw,db)
-    """
+
+def compute_gradients(
+    x: list[float], y: list[float], w: float, b: float
+) -> tuple[float, float]:
+    """Compute gradients of MSE with respect to weight and bias."""
     n = len(y)
-    dw,db = 0.0,0.0
+    dw, db = 0.0, 0.0
+
     for i in range(n):
-        error = y[i] - (w*x[i]+b)
-        dw += ( -2/n)* error *x[i]
-        db += (-2/n)* error 
-    return dw,db 
-def train(x: list[float],y: list[float],lr: float = 0.1, epochs : int = 1000) ->tuple[float,float,list[float]]:
-    """Trains linear regression using gradient descent .
-        x :input  features 
-        y:True labels
-        lr
+        error = y[i] - (w * x[i] + b)
+        dw += (-2 / n) * error * x[i]
+        db += (-2 / n) * error
 
-    Returns:
-        Tuple of(final w ,final b , MSE history)
-    """
-    w,b = 0.0,0.0
-    MSE_history = []
-    for k in range(epochs+1 ):
-        dw,db = compute_gradients(x,y,w,b)
-        w -= lr*dw
-        b -= lr*db 
-        MSE_history.append(compute_mse(x,y,w,b))
-    return w,b,MSE_history
-def plot_results(x: list[float], y: list[float], y_before: list[float], y_after: list[float], w: float, b: float) -> None:
-    """
-    Plots true data, predictions before and after training.
+    return dw, db
 
-    Args:
-        x: Input features
-        y: True labels
-        y_before: Predictions before training
-        y_after: Predictions after training
-        w: Final weight
-        b: Final bias
-    """
-    plt.scatter(x, y, label="data")
+
+def train(
+    x: list[float], y: list[float], lr: float = 0.1, epochs: int = 1000
+) -> tuple[float, float, list[float]]:
+    """Train linear regression parameters using gradient descent."""
+    w, b = 0.0, 0.0
+    mse_history: list[float] = []
+
+    for _ in range(epochs):
+        dw, db = compute_gradients(x, y, w, b)
+        w -= lr * dw
+        b -= lr * db
+        mse_history.append(compute_mse(x, y, w, b))
+
+    return w, b, mse_history
+
+
+def plot_results(
+    x: list[float],
+    y: list[float],
+    y_before: list[float],
+    y_after: list[float],
+    w: float,
+    b: float,
+) -> None:
+    """Plot data and model predictions before and after training."""
+    plt.scatter(x, y, label="Data points")
     plt.plot(x, y_before, label="Before training (w=0, b=0)")
     plt.plot(x, y_after, label=f"After training (w={w:.2f}, b={b:.2f})")
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Linear Regression Learning")
+    plt.title("Linear Regression via Gradient Descent")
     plt.legend()
+    plt.tight_layout()
     plt.show()
 
-w, b, MSE_history = train(x, y)
-y_after = [w * xi + b for xi in x]
 
-print(f"w: {w:.4f} | b: {b:.4f} | MSE: {MSE_history[-1]:.6f}")
-plot_results(x, y, y_before, y_after, w, b)
+def main() -> None:
+    """Run training and visualize results."""
+    y_before = [0.0 for _ in X_DATA]
+
+    w, b, mse_history = train(X_DATA, Y_DATA)
+    y_after = [w * xi + b for xi in X_DATA]
+
+    print(f"Final parameters -> w: {w:.4f}, b: {b:.4f}, MSE: {mse_history[-1]:.6f}")
+    plot_results(X_DATA, Y_DATA, y_before, y_after, w, b)
+
+
+if __name__ == "__main__":
+    main()
