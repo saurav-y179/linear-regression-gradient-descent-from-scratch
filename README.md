@@ -5,30 +5,29 @@ A clean, minimal implementation of **univariate linear regression** trained with
 This project is intended for learning and interview-style demonstration. It avoids machine learning frameworks so the optimization process is explicit and easy to follow.
 
 ## Overview
+Given a dataset:
+{(x_i, y_i)} for i = 1 to n
 
-Given data points \((x, y)\), the model learns parameters \(w\) and \(b\) for:
+Model:
+ŷ_i = w x_i + b
 
-\[
-\hat{y} = wx + b
-\]
+Loss function (Mean Squared Error):
+L(w, b) = (1/n) * Σ_{i=1}^{n} (y_i - ŷ_i)^2
 
-by minimizing **Mean Squared Error (MSE)**:
+Substituting ŷ_i:
+L(w, b) = (1/n) * Σ_{i=1}^{n} (y_i - (w x_i + b))^2
 
-\[
-\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2
-\]
+Gradients:
+∂L/∂w = (-2/n) * Σ_{i=1}^{n} x_i (y_i - (w x_i + b))
 
-Gradients used during optimization:
+∂L/∂b = (-2/n) * Σ_{i=1}^{n} (y_i - (w x_i + b))
 
-- \(\frac{\partial L}{\partial w} = \frac{-2}{n}\sum_{i=1}^{n}x_i(y_i - \hat{y}_i)\)
-- \(\frac{\partial L}{\partial b} = \frac{-2}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)\)
+Update rules (Gradient Descent):
+w ← w - α * (∂L/∂w)
 
-Update rule:
+b ← b - α * (∂L/∂b)
 
-- \(w \leftarrow w - \alpha \cdot \frac{\partial L}{\partial w}\)
-- \(b \leftarrow b - \alpha \cdot \frac{\partial L}{\partial b}\)
-
-where \(\alpha\) is the learning rate.
+where α > 0 is the learning rate
 
 ## Features
 
