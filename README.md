@@ -71,6 +71,8 @@ Expected outcome after training:
    ```
 
 The program prints final parameter values and displays a plot of the learned line.
+<img width="801" height="551" alt="image" src="https://github.com/user-attachments/assets/105bfda7-4d07-433a-91f0-340ae89a4462" />
+
 
 ## Notes on Learning Rate
 
